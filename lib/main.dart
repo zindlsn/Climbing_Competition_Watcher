@@ -1,8 +1,8 @@
-import 'package:climbing/view/overview.dart';
+import 'package:climbing/view/overview/overview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'view/overview_view_model.dart';
+import 'view/overview/overview_view_model.dart';
 
 void main() {
   runApp(

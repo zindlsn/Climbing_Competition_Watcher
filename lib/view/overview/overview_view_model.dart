@@ -1,11 +1,18 @@
 import 'dart:collection';
 
 import 'package:climbing/model/competition.dart';
+import 'package:climbing/services.dart';
 import 'package:flutter/material.dart';
 
 class OverviewViewModel extends ChangeNotifier {
   /// Internal, private state of the cart.
   final List<Competition> _items = [];
+
+  CompetitionService competitionService = CompetitionService();
+
+  OverviewViewModel() {
+    _items.addAll(competitionService.competitions);
+  }
 
   /// An unmodifiable view of the items in the cart.
   UnmodifiableListView<Competition> get items => UnmodifiableListView(_items);
@@ -26,5 +33,9 @@ class OverviewViewModel extends ChangeNotifier {
     _items.clear();
     // This call tells the widgets that are listening to this model to rebuild.
     notifyListeners();
+  }
+
+  Competition getByPosition(int index) {
+    return _items[index];
   }
 }
