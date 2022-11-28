@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:climbing/model/competition.dart';
 import 'package:climbing/services.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OverviewViewModel extends ChangeNotifier {
   /// Internal, private state of the cart.
@@ -37,5 +38,14 @@ class OverviewViewModel extends ChangeNotifier {
 
   Competition getByPosition(int index) {
     return _items[index];
+  }
+
+  Future<void> launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
   }
 }

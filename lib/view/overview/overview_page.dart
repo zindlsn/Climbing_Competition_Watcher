@@ -22,11 +22,8 @@ class _OverviewPageState extends State<OverviewPage> {
         body: Consumer<OverviewViewModel>(builder: (context, model, child) {
           return ListView.builder(
             itemCount: model.items.length,
-            prototypeItem: ListTile(
-              title: Text(model.items.first.title),
-            ),
             itemBuilder: (context, index) {
-              return _CompetitionCard(index);
+              return _CompetitionCard(index, model);
             },
           );
         }));
@@ -35,8 +32,9 @@ class _OverviewPageState extends State<OverviewPage> {
 
 class _CompetitionCard extends StatelessWidget {
   int index;
+  OverviewViewModel model;
 
-  _CompetitionCard(this.index);
+  _CompetitionCard(this.index, this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +45,27 @@ class _CompetitionCard extends StatelessWidget {
     );
     var textTheme = Theme.of(context).textTheme.titleLarge;
 
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(item.title),
-          Text(item.link.toString()),
-          Text(item.getFromDate()),
-        ],
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image(image: AssetImage('climbing.jpg'),height: 200,),
+            Padding(
+              padding: const EdgeInsets.only(left:32.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.getFromDate()),
+                  Text(item.title),
+                  GestureDetector(child: Text('Website'), onTap: () => model.launchInBrowser(item.link)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
