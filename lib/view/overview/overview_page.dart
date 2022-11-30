@@ -20,12 +20,20 @@ class _OverviewPageState extends State<OverviewPage> {
           title: Text("Überschrift"),
         ),
         body: Consumer<OverviewViewModel>(builder: (context, model, child) {
-          return ListView.builder(
-            itemCount: model.items.length,
-            itemBuilder: (context, index) {
-              return _CompetitionCard(index, model);
-            },
-          );
+          return FutureBuilder<List<Competition>?>(
+              future: model.loadAllCompetitionsAsync(),
+              builder: (context, future) {
+                if (!future.hasData)
+                  return Center(child: CircularProgressIndicator()); // Display empty container if the list is empty
+                else {
+                  List<Competition> list = future.data!;
+                  return ListView.builder(
+                      itemCount: list.length,
+                      itemBuilder: (context, index) {
+                        return _CompetitionCard(index, model);
+                      });
+                }
+              });
         }));
   }
 }
@@ -39,9 +47,7 @@ class _CompetitionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Competition item = context.select<OverviewViewModel, Competition>(
-      // Here, we are only interested in the item at [index]. We don't care
-      // about any other change.
-      (competitions) => competitions.getByPosition(index),
+          (competitions) => competitions.getByPosition(index)
     );
     var textTheme = Theme.of(context).textTheme.titleLarge;
 
@@ -51,16 +57,21 @@ class _CompetitionCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image(image: AssetImage('climbing.jpg'),height: 200,),
+            Image(
+              image: AssetImage('climbing.jpg'),
+              height: 100,
+            ),
             Padding(
-              padding: const EdgeInsets.only(left:32.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.only(left: 32.0),
+              child: Wrap(
+                direction: Axis.vertical,
+                spacing: 50,
                 children: [
-                  Text(item.getFromDate()),
                   Text(item.title),
-                  GestureDetector(child: Text('Website'), onTap: () => model.launchInBrowser(item.link)),
+                  Text(item.getFromDate()),
+                  GestureDetector(
+                      child: Text('Website'),
+                      onTap: () => model.launchInBrowser(item.link)),
                 ],
               ),
             ),

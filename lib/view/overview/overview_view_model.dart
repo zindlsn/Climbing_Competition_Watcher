@@ -12,7 +12,7 @@ class OverviewViewModel extends ChangeNotifier {
   CompetitionService competitionService = CompetitionService();
 
   OverviewViewModel() {
-    _items.addAll(competitionService.competitions);
+    //_items.addAll(competitionService.competitions);
   }
 
   /// An unmodifiable view of the items in the cart.
@@ -21,19 +21,29 @@ class OverviewViewModel extends ChangeNotifier {
   /// The current total price of all items (assuming all items cost $42).
   int get totalPrice => _items.length * 42;
 
+  Future<List<Competition>?> loadAllCompetitionsAsync() async {
+    removeAll();
+    List<Competition>? comps = await competitionService.getCompetitionsAsync();
+    if (comps != null) {
+      for (Competition comp in comps) {
+        add(comp);
+      }
+    }
+    return _items;
+  }
+
   /// Adds [item] to cart. This and [removeAll] are the only ways to modify the
   /// cart from the outside.
   void add(Competition item) {
     _items.add(item);
     // This call tells the widgets that are listening to this model to rebuild.
-    notifyListeners();
   }
 
   /// Removes all items from the cart.
   void removeAll() {
     _items.clear();
     // This call tells the widgets that are listening to this model to rebuild.
-    notifyListeners();
+   // notifyListeners();
   }
 
   Competition getByPosition(int index) {
