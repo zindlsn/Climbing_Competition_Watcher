@@ -1,10 +1,24 @@
+import 'package:climbing/globals/globals.dart';
+import 'package:climbing/services/api_controller.dart';
+import 'package:climbing/services/competition_service.dart';
 import 'package:climbing/view/overview/overview_page.dart';
+import 'package:climbing/view/widgets/planet_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'view/overview/overview_view_model.dart';
 
+
 void main() {
+  getIt.registerSingleton<CompetitionService>(CompetitionService());
+  getIt.registerSingleton<DatabaseService>(DatabaseService());
+
+  const mode = String.fromEnvironment('prodMode', defaultValue: 'true');
+  prodMode = mode.compareTo("true") == true ? true : false;
+
+  print(prodMode);
   runApp(
     ChangeNotifierProvider(
       create: (context) => OverviewViewModel(),
@@ -24,7 +38,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const OverviewPage(),
+      home: OverviewPage(),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:climbing/model/location.dart';
 import 'package:intl/intl.dart';
 
@@ -7,6 +9,12 @@ class Competition {
   Location location;
   DateTime? from;
   DateTime? to;
+
+  late final String name;
+  late final String category;
+  late final double rating;
+  late final Color startColor;
+  late final Color endColor;
 
   Competition(
       {required this.title,

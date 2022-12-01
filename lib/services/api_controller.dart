@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:climbing/model/competition.dart';
 import 'package:http/http.dart' as http;
 
-class ApiController {
+class DatabaseService {
   static String baseUrl = 'https://localhost:7109/api/';
   static String usersEndpoint = 'competition/GetNext';
 
@@ -18,7 +18,8 @@ class ApiController {
 
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
-        List<Competition> _model = userModelFromJson(await response.stream.bytesToString());
+        List<Competition> _model =
+            userModelFromJson(await response.stream.bytesToString());
         return _model;
       }
     } catch (e) {
