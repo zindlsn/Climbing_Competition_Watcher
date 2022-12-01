@@ -17,6 +17,30 @@ class DumpCompetitionService extends ICompetitionService {
           link: Uri(
               scheme: 'https',
               path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
+      Competition(
+          title: 'VELS WINTER-CUP 2022',
+          location: Location(),
+          from: DateTime(2022, 11, 26),
+          to: DateTime(2022, 12, 15),
+          link: Uri(
+              scheme: 'https',
+              path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
+      Competition(
+          title: 'VELS WINTER-CUP 2022',
+          location: Location(),
+          from: DateTime(2022, 11, 26),
+          to: DateTime(2022, 12, 15),
+          link: Uri(
+              scheme: 'https',
+              path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
+      Competition(
+          title: 'VELS WINTER-CUP 2022',
+          location: Location(),
+          from: DateTime(2022, 11, 26),
+          to: DateTime(2022, 12, 15),
+          link: Uri(
+              scheme: 'https',
+              path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
     ];
 
     Competition first = competitions[0]

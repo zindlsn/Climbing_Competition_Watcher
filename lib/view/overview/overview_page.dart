@@ -17,10 +17,11 @@ class _OverviewPageState extends State<OverviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Überschrift"),
-        ),
-        body: Consumer<OverviewViewModel>(builder: (context, model, child) {
+      appBar: AppBar(
+        title: Text("Competitons"),
+      ),
+      body: Consumer<OverviewViewModel>(
+        builder: (context, model, child) {
           return FutureBuilder<List<Competition>?>(
               future: model.loadAllCompetitionsAsync(),
               builder: (context, future) {
@@ -37,7 +38,10 @@ class _OverviewPageState extends State<OverviewPage> {
                       });
                 }
               });
-        }));
+        },
+      ),
+      backgroundColor: Colors.blueGrey[100],
+    );
   }
 }
 
@@ -55,64 +59,111 @@ Widget _selfView() {
       ),
       Container(
         padding: const EdgeInsets.only(left: 32, right: 32),
-        width: 200,
+        width: 50,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
           color: Colors.blueAccent,
-          elevation: 10,
-          child: Container(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                children: [
-                  Icon(Icons.ads_click),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: Text(
-                            'Gravitation',
+          elevation: 15,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.ads_click,
+                  color: Colors.blueGrey[100],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: Text(
+                              'Gravitation 8',
+                              style: TextStyle(
+                                  fontFamily: 'Open Sans',
+                                  color: Colors.blueGrey[100],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: Text(
+                              'Einstein Boulderhalle',
+                              style: TextStyle(
+                                  fontFamily: 'Open Sans',
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          ),
+                          Text(
+                            '12.11.2022 - 12.12.2022',
                             style: TextStyle(
                                 fontFamily: 'Open Sans',
-                                color: Colors.white,
+                                color: Colors.white70,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 24),
+                                fontSize: 14),
                           ),
-                        ),
-                        Text(
-                          '12.11.2022 - 12.12.2022',
-                          style: TextStyle(
-                              fontFamily: 'Open Sans',
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                          child: CustomPaint(
-                            size: Size(100, 20),
-                            painter: LinePainter(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                            child: CustomPaint(
+                              size: Size(100, 10),
+                              painter: LinePainter(),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Row(
+                          Row(
                             children: [
-                              Icon(Icons.location_pin),
-                              Text('Ulm, Boulderhalle'),
+                              Icon(Icons.location_pin,
+                                  color: Colors.blueAccent[100]),
+                              Text(
+                                'Ulm',
+                                style: TextStyle(
+                                    fontFamily: 'Open Sans',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                              ),
                             ],
                           ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.web,
+                              color: Colors.blueAccent[100],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'Zur Anmeldung',
+                                style: TextStyle(
+                                    fontFamily: 'Open Sans',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -126,7 +177,7 @@ class LinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
       ..color = Colors.white
-      ..strokeWidth = 5;
+      ..strokeWidth = 3;
 
     Offset start = Offset(0, size.height / 2);
     Offset end = Offset(size.width, size.height / 2);
