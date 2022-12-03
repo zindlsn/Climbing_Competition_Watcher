@@ -4,6 +4,7 @@ import 'package:climbing/model/competition.dart';
 import 'package:climbing/view/overview/overview_view_model.dart';
 import 'package:climbing/view/widgets/awesome_card.dart';
 import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';
 
 class OverviewPage extends StatefulWidget {
@@ -26,16 +27,13 @@ class _OverviewPageState extends State<OverviewPage> {
               future: model.loadAllCompetitionsAsync(),
               builder: (context, future) {
                 if (!future.hasData)
-                  return Center(
-                      child:
-                          CircularProgressIndicator()); // Display empty container if the list is empty
+                  return Center(child: CircularProgressIndicator());
+                else if (future.data!.isEmpty) {
+                  return Center(child: Text('There are no current competitions'));
+                } // Display empty container if the list is empty
                 else {
                   List<Competition> list = future.data!;
-                  return ListView.builder(
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        return _selfView();
-                      });
+                  return _selfView(model);
                 }
               });
         },
@@ -43,131 +41,143 @@ class _OverviewPageState extends State<OverviewPage> {
       backgroundColor: Colors.blueGrey[100],
     );
   }
+
+  @override
+  void initState() {}
 }
 
-Widget _selfView() {
+Widget _selfView(OverviewViewModel model) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          "Ludwigsburg",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      Container(
-        padding: const EdgeInsets.only(left: 32, right: 32),
-        width: 50,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          color: Colors.blueAccent,
-          elevation: 15,
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.ads_click,
-                  color: Colors.blueGrey[100],
+      Expanded(
+        child: GroupedListView<Competition, String>(
+            elements: model.items,
+            groupBy: (item) => (item.getFromDate()),
+            groupComparator: (value1, value2) => value2.compareTo(value1),
+            itemComparator: (item1, item2) => item2.city.compareTo(item1.city),
+            order: GroupedListOrder.DESC,
+            useStickyGroupSeparators: false,
+            groupSeparatorBuilder: (String value) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    value,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            itemBuilder: (c, element) {
+              return Container(
+                  padding: const EdgeInsets.only(left: 32, right: 32),
+                  width: 50,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    color: Colors.blueAccent,
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: Text(
-                              'Gravitation 8',
-                              style: TextStyle(
-                                  fontFamily: 'Open Sans',
-                                  color: Colors.blueGrey[100],
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24),
+                          Icon(
+                            Icons.ads_click,
+                            color: Colors.blueGrey[100],
+                          ),
+                          GestureDetector(
+                            onTap: () => model
+                                .launchInBrowser(Uri.parse("www.google.de")),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 24.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12.0),
+                                        child: Text(
+                                          'Gravitation 8',
+                                          style: TextStyle(
+                                              fontFamily: 'Open Sans',
+                                              color: Colors.blueGrey[100],
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12.0),
+                                        child: Text(
+                                          'Einstein Boulderhalle',
+                                          style: TextStyle(
+                                              fontFamily: 'Open Sans',
+                                              color: Colors.white70,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                      ),
+                                      Text(
+                                        '12.11.2022 - 12.12.2022',
+                                        style: TextStyle(
+                                            fontFamily: 'Open Sans',
+                                            color: Colors.white70,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 8.0, bottom: 16.0),
+                                        child: CustomPaint(
+                                          size: Size(100, 10),
+                                          painter: LinePainter(),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.location_pin,
+                                              color: Colors.blueAccent[100]),
+                                          Text(
+                                            element.city + " 40 km",
+                                            style: TextStyle(
+                                                fontFamily: 'Open Sans',
+                                                color: Colors.white70,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.web,
+                                  color: Colors.blueAccent[100],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    'Zur Anmeldung',
+                                    style: TextStyle(
+                                        fontFamily: 'Open Sans',
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: Text(
-                              'Einstein Boulderhalle',
-                              style: TextStyle(
-                                  fontFamily: 'Open Sans',
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          ),
-                          Text(
-                            '12.11.2022 - 12.12.2022',
-                            style: TextStyle(
-                                fontFamily: 'Open Sans',
-                                color: Colors.white70,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 8.0, bottom: 16.0),
-                            child: CustomPaint(
-                              size: Size(100, 10),
-                              painter: LinePainter(),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.location_pin,
-                                  color: Colors.blueAccent[100]),
-                              Text(
-                                'Ulm',
-                                style: TextStyle(
-                                    fontFamily: 'Open Sans',
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14),
-                              ),
-                            ],
                           ),
                         ],
                       ),
                     ),
-                    Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.web,
-                              color: Colors.blueAccent[100],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                'Zur Anmeldung',
-                                style: TextStyle(
-                                    fontFamily: 'Open Sans',
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+                  ));
+            }),
+      )
     ],
   );
 }

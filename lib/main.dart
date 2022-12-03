@@ -18,12 +18,12 @@ void main() {
   getIt.registerSingleton<DatabaseService>(DatabaseService());
 
   const mode = String.fromEnvironment('prodMode', defaultValue: 'true');
-  prodMode = mode.compareTo("true") == true ? true : false;
+  prodMode = mode.compareTo("true") == true ? true : true;
 
   print(prodMode);
   runApp(
     DevicePreview(
-      enabled: true,
+      enabled: false,
       tools: [
         ...DevicePreview.defaultTools,
       ],
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         BouncingScrollWrapper.builder(context, child!),
         maxWidth: 1200,
         minWidth: 450,
-        defaultScale: false,
+        defaultScale: true,
         breakpoints: [
           const ResponsiveBreakpoint.resize(450, name: MOBILE),
           const ResponsiveBreakpoint.autoScale(800, name: TABLET),

@@ -14,6 +14,7 @@ class DumpCompetitionService extends ICompetitionService {
           location: Location(),
           from: DateTime(2022, 11, 26),
           to: DateTime(2022, 12, 15),
+          city: "Ulm",
           link: Uri(
               scheme: 'https',
               path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
@@ -22,6 +23,7 @@ class DumpCompetitionService extends ICompetitionService {
           location: Location(),
           from: DateTime(2022, 11, 26),
           to: DateTime(2022, 12, 15),
+          city: "Atuttgart",
           link: Uri(
               scheme: 'https',
               path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
@@ -30,6 +32,7 @@ class DumpCompetitionService extends ICompetitionService {
           location: Location(),
           from: DateTime(2022, 11, 26),
           to: DateTime(2022, 12, 15),
+          city: "Btuttgart",
           link: Uri(
               scheme: 'https',
               path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
@@ -38,17 +41,56 @@ class DumpCompetitionService extends ICompetitionService {
           location: Location(),
           from: DateTime(2022, 11, 26),
           to: DateTime(2022, 12, 15),
+          city: "Dtuttgart",
+          link: Uri(
+              scheme: 'https',
+              path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
+      Competition(
+          title: 'VELS WINTER-CUP 2022',
+          location: Location(),
+          from: DateTime(2022, 11, 26),
+          to: DateTime(2022, 12, 15),
+          city: "Stuttgart",
+          link: Uri(
+              scheme: 'https',
+              path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
+      Competition(
+          title: 'VELS WINTER-CUP 2022',
+          location: Location(),
+          from: DateTime(2022, 11, 26),
+          to: DateTime(2022, 12, 15),
+          city: "Stuttgart",
+          link: Uri(
+              scheme: 'https',
+              path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
+      Competition(
+          title: 'VELS WINTER-CUP 2022',
+          location: Location(),
+          from: DateTime(2022, 11, 21),
+          to: DateTime(2022, 12, 15),
+          city: "Stuttgart",
+          link: Uri(
+              scheme: 'https',
+              path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
+      Competition(
+          title: 'VELS WINTER-CUP 2022',
+          location: Location(),
+          from: DateTime(2022, 11, 26),
+          to: DateTime(2022, 12, 15),
+          city: "Ludwigsburg",
+          link: Uri(
+              scheme: 'https',
+              path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
+      Competition(
+          title: 'VELS WINTER-CUP 2022',
+          location: Location(),
+          from: DateTime(2022, 11, 20),
+          to: DateTime(2022, 12, 15),
+          city: "Ludwigsburg",
           link: Uri(
               scheme: 'https',
               path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
     ];
-
-    Competition first = competitions[0]
-      ..rating = 1.0
-      ..startColor = Color(0xff6DC8F3)
-      ..endColor = Color(0xff73A1F9)
-      ..name = "Name"
-      ..category = "Spasswettkampf";
 
     return Future.value(competitions);
   }

@@ -6,14 +6,17 @@ import 'package:climbing/model/competition.dart';
 import 'package:http/http.dart' as http;
 
 class DatabaseService {
-  static String baseUrl = 'https://localhost:7109/api/';
+  static String baseUrl = 'https://localhost:7109/api/GetAll';
   static String usersEndpoint = 'competition/GetNext';
 
   Future<List<Competition>?> getCompetitions() async {
     try {
-      var headers = {'Content-Type': 'application/json'};
+      var headers = {
+        'Content-Type': 'application/json',
+        'XApiKey': "32c8e03b-c391-41f3-9eac-51fa34bc921a"
+      };
       var request = http.Request(
-          'GET', Uri.parse('https://localhost:7109/api/competition/'));
+          'GET', Uri.parse('https://localhost:7109/api/competition/GetAll'));
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();

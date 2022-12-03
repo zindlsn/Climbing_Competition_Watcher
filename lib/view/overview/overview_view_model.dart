@@ -28,7 +28,7 @@ class OverviewViewModel extends ChangeNotifier {
   /// The current total price of all items (assuming all items cost $42).
   int get totalPrice => _items.length * 42;
 
-  Future<List<Competition>?> loadAllCompetitionsAsync() async {
+  Future<List<Competition>> loadAllCompetitionsAsync() async {
     removeAll();
     List<Competition>? comps = await competitionService.getCompetitionsAsync();
     if (comps != null) {
