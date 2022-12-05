@@ -12,6 +12,7 @@ import 'package:climbing/main.dart';
 class OverviewViewModel extends ChangeNotifier {
   /// Internal, private state of the cart.
   final List<Competition> _items = [];
+  final List<Competition> _ongoingCompetitions = [];
   ICompetitionService competitionService = CompetitionService();
 
   OverviewViewModel() {
@@ -24,6 +25,9 @@ class OverviewViewModel extends ChangeNotifier {
 
   /// An unmodifiable view of the items in the cart.
   UnmodifiableListView<Competition> get items => UnmodifiableListView(_items);
+
+  UnmodifiableListView<Competition> get ongoingCompetitions =>
+      UnmodifiableListView(_ongoingCompetitions);
 
   /// The current total price of all items (assuming all items cost $42).
   int get totalPrice => _items.length * 42;
@@ -53,6 +57,12 @@ class OverviewViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
+  void removeAllOngoings() {
+    _ongoingCompetitions.clear();
+    // This call tells the widgets that are listening to this model to rebuild.
+    // notifyListeners();
+  }
+
   Competition getByPosition(int index) {
     return _items[index];
   }
@@ -64,5 +74,17 @@ class OverviewViewModel extends ChangeNotifier {
     )) {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<List<Competition>?> loadOngoingCompetitions() async {
+    removeAllOngoings();
+    List<Competition>? comps =
+        await competitionService.getOngoingCompetitions();
+    if (comps != null) {
+      for (Competition comp in comps) {
+        _ongoingCompetitions.add(comp);
+      }
+    }
+    return _ongoingCompetitions;
   }
 }

@@ -15,6 +15,7 @@ class OverviewPage extends StatefulWidget {
 }
 
 class _OverviewPageState extends State<OverviewPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,19 +24,49 @@ class _OverviewPageState extends State<OverviewPage> {
       ),
       body: Consumer<OverviewViewModel>(
         builder: (context, model, child) {
-          return FutureBuilder<List<Competition>?>(
-              future: model.loadAllCompetitionsAsync(),
-              builder: (context, future) {
-                if (!future.hasData)
-                  return Center(child: CircularProgressIndicator());
-                else if (future.data!.isEmpty) {
-                  return Center(child: Text('There are no current competitions'));
-                } // Display empty container if the list is empty
-                else {
-                  List<Competition> list = future.data!;
-                  return _selfView(model);
-                }
-              });
+          return Column(
+            children: [
+              Text('Current Running Competitions',
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)),
+              Flexible(
+                flex: 1,
+                child: FutureBuilder<List<Competition>?>(
+                    future: model.loadOngoingCompetitions(),
+                    builder: (context, future) {
+                      if (!future.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      else if (future.data!.isEmpty) {
+                        return Align(
+                          alignment: Alignment.topCenter,
+                            child: Text('There are no current competitions'));
+                      } // Display empty container if the list is empty
+                      else {
+                        List<Competition> list = future.data!;
+                        return _selfListView(model);
+                      }
+                    }),
+              ),
+              Flexible(
+                flex: model.ongoingCompetitions.length> 2 ? 4 : 3,
+                child: FutureBuilder<List<Competition>?>(
+                    future: model.loadAllCompetitionsAsync(),
+                    builder: (context, future) {
+                      if (!future.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      else if (future.data!.isEmpty) {
+                        return Center(
+                            child: Text('There are no current competitions'));
+                      } // Display empty container if the list is empty
+                      else {
+                        List<Competition> list = future.data!;
+                        return _selfView(model);
+                      }
+                    }),
+              ),
+            ],
+          );
         },
       ),
       backgroundColor: Colors.blueGrey[100],
@@ -44,6 +75,125 @@ class _OverviewPageState extends State<OverviewPage> {
 
   @override
   void initState() {}
+}
+
+Widget _selfListView(OverviewViewModel model) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Expanded(
+          child: ListView.builder(
+        itemCount: model.items.length,
+        itemBuilder: (context, index) {
+          return Container(
+              padding: const EdgeInsets.only(left: 32, right: 32),
+              width: 50,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                color: Colors.blueAccent,
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.ads_click,
+                        color: Colors.blueGrey[100],
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            model.launchInBrowser(Uri.parse("www.google.de")),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 24.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Text(
+                                      'Gravitation 8',
+                                      style: TextStyle(
+                                          fontFamily: 'Open Sans',
+                                          color: Colors.blueGrey[100],
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Text(
+                                      'Einstein Boulderhalle',
+                                      style: TextStyle(
+                                          fontFamily: 'Open Sans',
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14),
+                                    ),
+                                  ),
+                                  Text(
+                                    '12.11.2022 - 12.12.2022',
+                                    style: TextStyle(
+                                        fontFamily: 'Open Sans',
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8.0),
+                                    child: CustomPaint(
+                                      size: Size(100, 10),
+                                      painter: LinePainter(),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.location_pin,
+                                          color: Colors.blueAccent[100]),
+                                      Text(
+                                        model.items[index].city + " 40 km",
+                                        style: TextStyle(
+                                            fontFamily: 'Open Sans',
+                                            color: Colors.white70,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.web,
+                              color: Colors.blueAccent[100],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'Zur Anmeldung',
+                                style: TextStyle(
+                                    fontFamily: 'Open Sans',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+        },
+      ))
+    ],
+  );
 }
 
 Widget _selfView(OverviewViewModel model) {
@@ -78,7 +228,7 @@ Widget _selfView(OverviewViewModel model) {
                     color: Colors.blueAccent,
                     elevation: 5,
                     child: Padding(
-                      padding: const EdgeInsets.all(24.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
                           Icon(
@@ -99,26 +249,26 @@ Widget _selfView(OverviewViewModel model) {
                                     children: [
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(bottom: 12.0),
+                                            const EdgeInsets.only(bottom: 8.0),
                                         child: Text(
                                           'Gravitation 8',
                                           style: TextStyle(
                                               fontFamily: 'Open Sans',
                                               color: Colors.blueGrey[100],
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 24),
+                                              fontSize: 16),
                                         ),
                                       ),
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(bottom: 12.0),
+                                            const EdgeInsets.only(bottom: 8.0),
                                         child: Text(
                                           'Einstein Boulderhalle',
                                           style: TextStyle(
                                               fontFamily: 'Open Sans',
                                               color: Colors.white70,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 20),
+                                              fontSize: 14),
                                         ),
                                       ),
                                       Text(
@@ -131,7 +281,7 @@ Widget _selfView(OverviewViewModel model) {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                            top: 8.0, bottom: 16.0),
+                                            top: 8.0, bottom: 8.0),
                                         child: CustomPaint(
                                           size: Size(100, 10),
                                           painter: LinePainter(),
@@ -147,7 +297,7 @@ Widget _selfView(OverviewViewModel model) {
                                                 fontFamily: 'Open Sans',
                                                 color: Colors.white70,
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 14),
+                                                fontSize: 12),
                                           ),
                                         ],
                                       ),
@@ -166,7 +316,7 @@ Widget _selfView(OverviewViewModel model) {
                                         fontFamily: 'Open Sans',
                                         color: Colors.white70,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 14),
+                                        fontSize: 12),
                                   ),
                                 ),
                               ],

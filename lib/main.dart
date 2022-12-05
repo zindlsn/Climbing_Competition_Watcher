@@ -18,7 +18,7 @@ void main() {
   getIt.registerSingleton<DatabaseService>(DatabaseService());
 
   const mode = String.fromEnvironment('prodMode', defaultValue: 'true');
-  prodMode = mode.compareTo("true") == true ? true : true;
+  prodMode = mode.compareTo("true") == true ? false : false;
 
   print(prodMode);
   runApp(

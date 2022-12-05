@@ -19,4 +19,10 @@ class CompetitionService extends ICompetitionService{
   Future<List<Competition>?> getNextCompetition() async {
     return await apiController.getNextCompetition();
   }
+
+  @override
+  Future<List<Competition>?> getOngoingCompetitions() async{
+    return await apiController.getOnGoingCompetitions();
+
+  }
 }

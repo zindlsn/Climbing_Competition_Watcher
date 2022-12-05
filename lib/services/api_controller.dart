@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:climbing/model/competition.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class DatabaseService {
   static String baseUrl = 'https://localhost:7109/api/GetAll';
@@ -25,6 +26,21 @@ class DatabaseService {
             userModelFromJson(await response.stream.bytesToString());
         return _model;
       }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Request? getRequest(String path) {
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'XApiKey': "32c8e03b-c391-41f3-9eac-51fa34bc921a"
+      };
+      var request = http.Request(
+          'GET', Uri.parse('https://localhost:7109/api/competition/' + path));
+      request.headers.addAll(headers);
+      return request;
     } catch (e) {
       log(e.toString());
     }
@@ -68,4 +84,22 @@ class DatabaseService {
 
   List<Competition> userModelFromJson(String str) => List<Competition>.from(
       json.decode(str).map((x) => Competition.fromJson(x)));
+
+  Future<List<Competition>?> getOnGoingCompetitions() async {
+    try {
+      Request? request = await getRequest('GetOngoingCompetitons');
+
+      http.StreamedResponse? response;
+      if (request != null) {
+        response = await request.send();
+      }
+      if (response!.statusCode == 200) {
+        List<Competition> _model =
+            userModelFromJson(await response.stream.bytesToString());
+        return _model;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }

@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 class DumpCompetitionService extends ICompetitionService {
   List<Competition> competitions = [];
 
-  @override
-  Future<List<Competition>?> getCompetitionsAsync() {
+  DumpCompetitionService() {
     competitions = [
       Competition(
           title: 'VELS WINTER-CUP 2022',
@@ -91,7 +90,10 @@ class DumpCompetitionService extends ICompetitionService {
               scheme: 'https',
               path: 'vels-stuttgart.de/winter-cup-vels-2022/')),
     ];
+  }
 
+  @override
+  Future<List<Competition>?> getCompetitionsAsync() {
     return Future.value(competitions);
   }
 
@@ -99,5 +101,11 @@ class DumpCompetitionService extends ICompetitionService {
   Future<List<Competition>?> getNextCompetition() {
     // TODO: implement getNextCompetition
     throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Competition>?> getOngoingCompetitions() {
+    // TODO: implement getOngoingCompetitions
+    return Future.value(competitions);
   }
 }
